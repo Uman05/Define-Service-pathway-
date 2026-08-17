@@ -145,6 +145,18 @@
   .eco .wrap{padding:52px 30px}
   .eco h3{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(22px,3vw,30px);color:#fff;margin:8px 0 6px;letter-spacing:-0.015em}
   .eco .sub{color:var(--steel);font-size:15px;margin:0 0 30px;max-width:64ch}
+  .net{position:relative;width:100%;margin:0 auto 34px;max-width:900px}
+  .net svg{width:100%;height:auto;display:block;overflow:visible}
+  .net .link{stroke:rgba(79,214,227,0.22);stroke-width:1;fill:none}
+  .net .pulse{stroke:var(--cyan);stroke-width:1.6;fill:none;stroke-linecap:round;stroke-dasharray:6 220;animation:flow 3.6s linear infinite;opacity:.9}
+  @keyframes flow{to{stroke-dashoffset:-226}}
+  .net .hub-ring{fill:none;stroke:rgba(255,201,60,0.5);stroke-width:1.2}
+  .net .hub-core{fill:var(--signal)}
+  .net .nd{fill:rgba(12,22,38,0.95);stroke:rgba(79,214,227,0.55);stroke-width:1.2}
+  .net .nd-glow{fill:rgba(79,214,227,0.12)}
+  .net text{font-family:"IBM Plex Mono",monospace;fill:var(--text);font-size:11px;letter-spacing:0.02em}
+  .net .hub-label{font-family:"Space Grotesk",sans-serif;font-weight:700;fill:#fff;font-size:15px;letter-spacing:0.14em}
+  .net .grp{transform-box:fill-box;transform-origin:center}
   .eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:14px;overflow:hidden}
   .eco-cell{background:rgba(11,20,35,0.7);padding:20px 22px;transition:background .2s}
   .eco-cell:hover{background:rgba(18,30,52,0.85)}
@@ -161,9 +173,9 @@
   .foot .wrap{padding:22px 30px 30px}
   .foot p{margin:0;font-size:12px;color:var(--steel-2);line-height:1.7}
   @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:28px}.status{max-width:420px}}
-  @media(max-width:720px){.wrap{padding:0 20px}.cols{grid-template-columns:1fr}.node .lbl{display:none}.dot{width:44px;height:44px;font-size:15px}.rail,.rail-fill{top:22px}.rail-energy{top:21px}.panel{padding:26px 22px}.mobile-lbl{display:block !important}.stat{padding:18px 16px}.stat .n{font-size:22px}}
+  @media(max-width:720px){.wrap{padding:0 20px}.cols{grid-template-columns:1fr}.node .lbl{display:none}.dot{width:44px;height:44px;font-size:15px}.rail,.rail-fill{top:22px}.rail-energy{top:21px}.panel{padding:26px 22px}.mobile-lbl{display:block !important}.stat{padding:18px 16px}.stat .n{font-size:22px}.net text{font-size:10px}}
   .mobile-lbl{display:none;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:13px;color:var(--cyan);margin-top:14px;text-align:center}
-  @media(prefers-reduced-motion:reduce){.rail-fill,.panel,.status .prog i{transition:none}.node[aria-selected="true"] .dot{transform:scale(1.14)}.radar,.dot::after,.rail-energy::before,.status .live .dotlive,.field::before{animation:none !important}canvas#particles{display:none}}
+  @media(prefers-reduced-motion:reduce){.rail-fill,.panel,.status .prog i{transition:none}.node[aria-selected="true"] .dot{transform:scale(1.14)}.radar,.dot::after,.rail-energy::before,.status .live .dotlive,.net .pulse,.net .grp,.field::before{animation:none !important}canvas#particles{display:none}}
 </style>
 </head>
 <body>
@@ -247,6 +259,7 @@
       <span class="kicker">Why Riihimäki</span>
       <h3>The people you need are next door</h3>
       <p class="sub">Whatever route you take, the ecosystem is a compact, working one: end-users, industry, research and coaches in a single small city.</p>
+      <div class="net" id="net" aria-hidden="true"></div>
       <div class="eco-grid">
         <div class="eco-cell"><div class="r">End-users</div><div class="n">Finnish Defence Forces</div><div class="d">Research and technology units based in Riihimäki</div></div>
         <div class="eco-cell"><div class="r">Industry</div><div class="n">Sako &amp; Millog</div><div class="d">Defence-industry partners; Millog runs the dual-use testing</div></div>
@@ -426,6 +439,39 @@
   });
 
   render(0); go(0);
+
+  /* animated strategic ecosystem network */
+  (function(){
+    const host = document.getElementById('net');
+    if(!host) return;
+    const outer = [
+      "Finnish Defence Forces","Sako","Millog","ICEYE","Varjo",
+      "Kelluu","Redstone","City of Riihimäki","HAMK","NATO & EU","Sitra"
+    ];
+    const W = 900, H = 470, cx = W/2, cy = H/2 + 6, rx = 340, ry = 178;
+    const n = outer.length;
+    let links = "", pulses = "", nodes = "";
+    for (let k=0;k<n;k++){
+      const a = (-90 + k*(360/n)) * Math.PI/180;
+      const x = cx + rx*Math.cos(a), y = cy + ry*Math.sin(a);
+      const right = x >= cx;
+      const anchor = right ? "start" : "end";
+      const tx = x + (right ? 12 : -12);
+      links  += `<line class="link" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}"/>`;
+      pulses += `<line class="pulse" x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" style="animation-delay:${(k*0.32).toFixed(2)}s"/>`;
+      nodes  += `<g class="grp" style="animation:breathe ${(5+ (k%4)).toFixed(1)}s ease-in-out ${(k*0.4).toFixed(1)}s infinite">`
+             +  `<circle class="nd-glow" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9"/>`
+             +  `<circle class="nd" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5"/>`
+             +  `<text x="${tx.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="${anchor}">${outer[k].replace(/&/g,'&amp;')}</text>`
+             +  `</g>`;
+    }
+    const hub = `<circle class="hub-ring" cx="${cx}" cy="${cy}" r="34"/>`
+              + `<circle class="hub-ring" cx="${cx}" cy="${cy}" r="22" style="opacity:.6"/>`
+              + `<circle class="hub-core" cx="${cx}" cy="${cy}" r="6"/>`
+              + `<text class="hub-label" x="${cx}" y="${cy-46}" text-anchor="middle">DEFINE</text>`;
+    host.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="DEFINE ecosystem network">`
+                   + links + pulses + hub + nodes + `</svg>`;
+  })();
 
   /* ambient particles */
   (function(){
