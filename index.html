@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The DEFINE Service &amp; Partner Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080C15; --bg-2:#0A1120; --night:#0C1626; --navy:#111E33; --navy-2:#16233A;
+    --cyan:#4FD6E3; --cyan-dim:rgba(79,214,227,0.55); --signal:#FFC93C;
+    --white:#F3F7FD; --text:#DCE4F0; --steel:#8493AE; --steel-2:#6B7A95;
+    --line:rgba(220,228,240,0.12); --line-soft:rgba(220,228,240,0.07);
+    --glass:rgba(18,30,52,0.55); --glass-2:rgba(22,35,58,0.72);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Inter",system-ui,sans-serif;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 30px}
+  .field{position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:radial-gradient(60% 55% at 78% 8%, rgba(79,214,227,0.10), transparent 55%),radial-gradient(55% 50% at 12% 92%, rgba(255,201,60,0.05), transparent 55%),linear-gradient(180deg,#070B13 0%,#0A1120 55%,#070B13 100%);}
+  .field::before{content:"";position:absolute;inset:-2px;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 66px),repeating-linear-gradient(90deg, rgba(255,255,255,0.028) 0 1px, transparent 1px 66px);
+    -webkit-mask:radial-gradient(130% 110% at 50% 24%, #000 52%, transparent 100%);mask:radial-gradient(130% 110% at 50% 24%, #000 52%, transparent 100%);animation:drift 40s ease-in-out infinite;}
+  .field::after{content:"";position:absolute;inset:0;
+    background:repeating-radial-gradient(circle at 84% 14%, transparent 0 40px, rgba(79,214,227,0.045) 40px 41px, transparent 41px 84px),repeating-radial-gradient(circle at 6% 96%, transparent 0 54px, rgba(255,201,60,0.035) 54px 55px, transparent 55px 110px);opacity:.8;}
+  @keyframes drift{0%,100%{background-position:0 0,0 0}50%{background-position:0 22px,22px 0}}
+  .radar{position:fixed;top:-190px;right:-190px;width:640px;height:640px;border-radius:50%;z-index:-2;pointer-events:none;opacity:.55;
+    background:conic-gradient(from 0deg, rgba(79,214,227,0.20) 0deg, rgba(79,214,227,0.02) 26deg, transparent 34deg);
+    -webkit-mask:radial-gradient(circle, transparent 22%, #000 23%, #000 68%, transparent 70%);mask:radial-gradient(circle, transparent 22%, #000 23%, #000 68%, transparent 70%);animation:sweep 9s linear infinite;}
+  .radar-rings{position:fixed;top:-190px;right:-190px;width:640px;height:640px;z-index:-2;pointer-events:none;opacity:.4;border-radius:50%;
+    background:radial-gradient(circle, transparent 21.5%, var(--cyan-dim) 22%, transparent 22.6%),radial-gradient(circle, transparent 44%, rgba(79,214,227,0.28) 44.4%, transparent 45%),radial-gradient(circle, transparent 67.5%, rgba(79,214,227,0.22) 68%, transparent 68.6%);}
+  @keyframes sweep{to{transform:rotate(360deg)}}
+  canvas#particles{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.6}
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--cyan);}
+  .kicker.steel{color:var(--steel)}
+  .hero{position:relative}
+  .hero .wrap{padding:40px 30px 40px;position:relative;z-index:1}
+  .topline{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:30px}
+  .topline .brand{display:flex;align-items:center;gap:12px;font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:0.16em;font-size:17px;color:#fff}
+  .topline .brand .mark{width:26px;height:26px;color:var(--cyan)}
+  .topline .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--steel)}
+  .hero-grid{display:grid;grid-template-columns:1.55fr 0.95fr;gap:40px;align-items:end}
+  .hero h1{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-0.02em;font-size:clamp(30px,5vw,54px);line-height:1.03;color:#fff;margin:0;max-width:17ch;}
+  .hero h1 .accent{color:var(--signal)}
+  .hero h1 .cy{color:var(--cyan)}
+  .hero .lede{margin:20px 0 0;max-width:60ch;color:var(--text);font-size:clamp(15px,1.7vw,17px)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .chip{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:0.03em;border:1px solid rgba(79,214,227,0.32);color:var(--cyan);padding:7px 13px;border-radius:100px;white-space:nowrap;background:rgba(79,214,227,0.04);}
+  .chip.solid{background:var(--signal);color:var(--night);font-weight:600;border-color:var(--signal)}
+  .coords{margin-top:24px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.14em;color:var(--steel-2)}
+  .coords b{color:rgba(255,201,60,0.85);font-weight:500}
+  .status{background:var(--glass);border:1px solid var(--line);border-radius:16px;padding:22px 24px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 24px 60px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.05);position:relative;overflow:hidden}
+  .status::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent)}
+  .status .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .status .live{display:flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:0.2em;text-transform:uppercase;color:var(--steel)}
+  .status .live .dotlive{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2.4s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .status .code{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:0.16em;color:var(--cyan)}
+  .status .node-name{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:24px;color:#fff;margin:16px 0 4px;line-height:1.05}
+  .status .node-sub{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.06em;color:var(--steel)}
+  .status .prog{height:4px;border-radius:3px;background:rgba(255,255,255,0.08);margin-top:18px;overflow:hidden}
+  .status .prog i{display:block;height:100%;width:20%;background:linear-gradient(90deg,var(--signal),#ffdd7a);border-radius:3px;transition:width .5s cubic-bezier(.6,.05,.2,1);box-shadow:0 0 12px rgba(255,201,60,0.5)}
+  .stats{margin-top:6px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(10,17,32,0.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:0;padding:0 30px}
+  .stat{padding:24px 22px;border-left:1px solid var(--line-soft);position:relative}
+  .stat:first-child{border-left:none}
+  .stat .n{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:27px;color:#fff;line-height:1.1}
+  .stat .n .u{color:var(--cyan);font-weight:500}
+  .stat .d{font-size:12px;color:var(--steel);margin-top:6px;line-height:1.45}
+  .stats-head{padding:16px 30px 0}
+  /* segment selector */
+  .segsec{padding:30px 0 6px}
+  .segsec .lab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--steel);margin-bottom:14px}
+  .segbar{display:flex;flex-wrap:wrap;gap:10px}
+  .seg-btn{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px;color:var(--text);
+    border:1.5px solid var(--line);background:rgba(18,30,52,0.5);border-radius:100px;padding:11px 20px;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:9px}
+  .seg-btn .sd{width:8px;height:8px;border-radius:50%;background:var(--steel);transition:all .18s}
+  .seg-btn:hover{border-color:var(--cyan);color:#fff}
+  .seg-btn[aria-pressed="true"]{background:var(--signal);color:var(--night);border-color:var(--signal)}
+  .seg-btn[aria-pressed="true"] .sd{background:var(--night)}
+  .journey{padding:34px 0 10px}
+  .journey-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .journey-head h2{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(20px,2.6vw,26px);color:#fff;margin:6px 0 0;letter-spacing:-0.01em}
+  .counter{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--steel)}
+  .counter b{color:var(--cyan)}
+  .track{position:relative;margin:40px 0 12px;padding:0 6px}
+  .rail{position:absolute;left:6px;right:6px;top:26px;height:2px;background:rgba(220,228,240,0.14);border-radius:2px}
+  .rail::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), rgba(79,214,227,0.28) calc(25% - 1px) 25%);}
+  .rail-energy{position:absolute;left:6px;right:6px;top:25px;height:4px;border-radius:3px;overflow:hidden;pointer-events:none}
+  .rail-energy::before{content:"";position:absolute;top:0;height:100%;width:120px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);filter:blur(1px);animation:energy 4.2s linear infinite}
+  @keyframes energy{0%{left:-140px}100%{left:100%}}
+  .rail-fill{position:absolute;left:6px;top:26px;height:2px;background:linear-gradient(90deg,var(--signal),#ffe08a);border-radius:2px;width:0%;transition:width .5s cubic-bezier(.6,.05,.2,1);z-index:1;box-shadow:0 0 14px rgba(255,201,60,0.6)}
+  .nodes{position:relative;display:flex;justify-content:space-between;gap:4px}
+  .node{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;background:none;border:none;cursor:pointer;padding:0;min-width:0}
+  .dot{width:52px;height:52px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:17px;background:rgba(12,22,38,0.92);border:1.5px solid rgba(79,214,227,0.4);color:var(--cyan);transition:all .28s ease;position:relative;z-index:2;box-shadow:0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06)}
+  .node .lbl{font-family:"Inter",sans-serif;font-size:12.5px;font-weight:600;color:var(--steel);text-align:center;line-height:1.25;transition:color .2s;max-width:130px}
+  .dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(79,214,227,0.18);animation:breathe 5s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.12);opacity:.15}}
+  .node.done .dot{border-color:var(--signal);color:var(--signal);background:rgba(255,201,60,0.1)}
+  .node.done .lbl{color:var(--text)}
+  .node[aria-selected="true"] .dot{background:var(--signal);border-color:var(--signal);color:var(--night);transform:scale(1.14);box-shadow:0 0 0 4px rgba(255,201,60,0.16),0 8px 28px rgba(255,201,60,0.3)}
+  .node[aria-selected="true"] .dot::after{border-color:rgba(255,201,60,0.55);animation:pulse-ring 2.4s ease-out infinite}
+  @keyframes pulse-ring{0%{transform:scale(1);opacity:.7}70%{transform:scale(1.6);opacity:0}100%{opacity:0}}
+  .node[aria-selected="true"] .lbl{color:#fff}
+  .node:hover .dot{border-color:var(--cyan);transform:scale(1.06)}
+  .node[aria-selected="true"]:hover .dot{transform:scale(1.14)}
+  .node:focus-visible{outline:none}
+  .node:focus-visible .dot{outline:3px solid var(--cyan);outline-offset:4px}
+  .panel-zone{padding:20px 0 40px}
+  .panel{position:relative;overflow:hidden;border-radius:20px;padding:34px 38px;background:var(--glass-2);border:1px solid var(--line);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);opacity:1;transform:none;transition:opacity .34s ease, transform .34s ease}
+  .panel::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,214,227,0.6),transparent)}
+  .panel::after{content:attr(data-code);position:absolute;top:26px;right:30px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.24em;color:var(--cyan);opacity:.6}
+  .panel.fading{opacity:0;transform:translateY(10px)}
+  .mod-head{display:flex;gap:22px;align-items:flex-start}
+  .mod-icon{flex:none;width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,rgba(79,214,227,0.14),rgba(79,214,227,0.02));border:1px solid rgba(79,214,227,0.28);color:var(--cyan);box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 8px 24px rgba(0,0,0,0.3)}
+  .mod-icon svg{width:32px;height:32px}
+  .mod-headings{min-width:0;flex:1}
+  .stage-eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--steel);margin-bottom:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .badge{background:var(--signal);color:var(--night);font-weight:600;padding:3px 10px;border-radius:100px;letter-spacing:0.05em;font-size:10.5px}
+  .badge.route{background:rgba(79,214,227,0.12);color:var(--cyan);border:1px solid var(--cyan-dim)}
+  .panel h2{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(24px,3.4vw,34px);letter-spacing:-0.02em;margin:0;color:#fff}
+  .panel .qn{font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:16px;color:var(--cyan);margin:6px 0 0}
+  .panel .sum{font-size:16.5px;color:var(--text);margin:20px 0 22px;max-width:74ch}
+  .routechips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+  .routechips .rc{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--night);background:var(--signal);border-radius:100px;padding:7px 15px;font-weight:600}
+  .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);border-radius:14px;overflow:hidden}
+  .col{background:rgba(10,17,32,0.5);padding:20px 22px}
+  .col .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .col .k::before{content:"";width:6px;height:6px;border-radius:50%;flex:none}
+  .col.sees .k{color:var(--cyan)} .col.sees .k::before{background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+  .col.owns .k{color:var(--signal)} .col.owns .k::before{background:var(--signal);box-shadow:0 0 8px var(--signal)}
+  .col.touch .k{color:var(--steel)} .col.touch .k::before{background:var(--steel)}
+  .col p{margin:0;font-size:14.5px;line-height:1.55;color:var(--text)}
+  .nav-row{display:flex;justify-content:space-between;gap:12px;margin-top:28px;flex-wrap:wrap}
+  .nav-btn{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14.5px;border:1.5px solid rgba(79,214,227,0.5);background:rgba(79,214,227,0.05);color:var(--cyan);border-radius:100px;padding:11px 22px;cursor:pointer;transition:all .18s}
+  .nav-btn:hover{background:var(--cyan);color:var(--night);border-color:var(--cyan)}
+  .nav-btn:disabled{opacity:0.28;cursor:default}
+  .nav-btn.primary{background:var(--signal);color:var(--night);border-color:var(--signal)}
+  .nav-btn.primary:hover{background:#ffd867;border-color:#ffd867;transform:translateY(-1px)}
+  .eco{margin-top:30px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(9,14,26,0.55)}
+  .eco .wrap{padding:52px 30px}
+  .eco h3{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(22px,3vw,30px);color:#fff;margin:8px 0 6px;letter-spacing:-0.015em}
+  .eco .sub{color:var(--steel);font-size:15px;margin:0 0 30px;max-width:64ch}
+  .eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .eco-cell{background:rgba(11,20,35,0.7);padding:20px 22px;transition:background .2s}
+  .eco-cell:hover{background:rgba(18,30,52,0.85)}
+  .eco-cell .r{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+  .eco-cell .n{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15.5px;color:#fff;line-height:1.3}
+  .eco-cell .d{font-size:12.5px;color:var(--steel);margin-top:6px;line-height:1.5}
+  .cta{border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(11,20,35,0.4),rgba(7,11,19,0.7))}
+  .cta .wrap{padding:44px 30px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .cta h3{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(22px,3vw,28px);color:#fff;margin:0 0 8px;letter-spacing:-0.015em}
+  .cta .sub{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--steel);margin:0;letter-spacing:0.04em}
+  .cta a.apply{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:16px;text-decoration:none;background:var(--signal);color:var(--night);padding:16px 30px;border-radius:100px;white-space:nowrap;transition:transform .15s ease,box-shadow .15s ease;display:inline-block;box-shadow:0 10px 30px rgba(255,201,60,0.25)}
+  .cta a.apply:hover{transform:translateY(-2px)}
+  .foot{border-top:1px solid var(--line-soft)}
+  .foot .wrap{padding:22px 30px 30px}
+  .foot p{margin:0;font-size:12px;color:var(--steel-2);line-height:1.7}
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:28px}.status{max-width:420px}}
+  @media(max-width:720px){.wrap{padding:0 20px}.cols{grid-template-columns:1fr}.node .lbl{display:none}.dot{width:44px;height:44px;font-size:15px}.rail,.rail-fill{top:22px}.rail-energy{top:21px}.panel{padding:26px 22px}.mobile-lbl{display:block !important}.stat{padding:18px 16px}.stat .n{font-size:22px}}
+  .mobile-lbl{display:none;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:13px;color:var(--cyan);margin-top:14px;text-align:center}
+  @media(prefers-reduced-motion:reduce){.rail-fill,.panel,.status .prog i{transition:none}.node[aria-selected="true"] .dot{transform:scale(1.14)}.radar,.dot::after,.rail-energy::before,.status .live .dotlive,.field::before{animation:none !important}canvas#particles{display:none}}
+</style>
+</head>
+<body>
+<div class="field" aria-hidden="true"></div>
+<div class="radar-rings" aria-hidden="true"></div>
+<div class="radar" aria-hidden="true"></div>
+<canvas id="particles" aria-hidden="true"></canvas>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topline">
+      <span class="brand">
+        <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="3.4"/></svg>
+        DEFINE
+      </span>
+      <span class="tag">Service &amp; partner path · Riihimäki, Finland</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <h1>The DEFINE <span class="cy">service</span> &amp; <span class="accent">partner path</span></h1>
+        <p class="lede">One understandable entry path into DEFINE, with a different route depending on who you are. Five stages take you from first contact to continued cooperation. Choose your partner type, then tap any stage.</p>
+        <div class="chips">
+          <span class="chip solid">One journey</span>
+          <span class="chip solid">Five routes</span>
+          <span class="chip">A named contact from day one</span>
+          <span class="chip">First contact to cooperation</span>
+        </div>
+        <p class="coords"><b>RIIHIMÄKI</b> · 60°44′N 24°46′E · 55 MIN FROM HELSINKI</p>
+      </div>
+      <aside class="status" aria-label="Current stage">
+        <div class="row">
+          <span class="live"><span class="dotlive"></span> Current stage</span>
+        </div>
+        <div class="node-name" id="statusName">Discover</div>
+        <div class="node-sub" id="statusSub">Stage 1 / 5 · <span id="statusSeg">Company / Startup</span></div>
+        <div class="prog"><i id="statusBar"></i></div>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<section class="stats" aria-label="The path in numbers">
+  <div class="stats-head"><span class="kicker steel">The path in numbers</span></div>
+  <div class="wrap">
+    <div class="stat"><div class="n">5</div><div class="d">Stages, first contact to continued cooperation</div></div>
+    <div class="stat"><div class="n">5</div><div class="d">Routes, one per partner type</div></div>
+    <div class="stat"><div class="n">44</div><div class="d">Companies behind the design</div></div>
+    <div class="stat"><div class="n">1</div><div class="d">Named contact, from day one</div></div>
+  </div>
+</section>
+
+<main>
+  <section class="segsec wrap" aria-label="Choose your partner type">
+    <div class="lab">Step 1 · Who are you?</div>
+    <div class="segbar" id="segbar" role="group" aria-label="Partner type"></div>
+  </section>
+
+  <section class="journey wrap" aria-label="The five stages">
+    <div class="journey-head">
+      <div>
+        <span class="kicker">Step 2 · The service &amp; partner path</span>
+        <h2>Five stages, one journey</h2>
+      </div>
+      <span class="counter">Stage <b id="counterNow">1</b> of 5</span>
+    </div>
+    <div class="track">
+      <div class="rail"></div>
+      <div class="rail-energy" aria-hidden="true"></div>
+      <div class="rail-fill" id="railFill"></div>
+      <div class="nodes" role="tablist" aria-label="Path stages" id="nodes"></div>
+    </div>
+    <div class="mobile-lbl" id="mobileLbl"></div>
+  </section>
+
+  <section class="panel-zone wrap">
+    <article class="panel" id="panel" role="tabpanel" tabindex="0" aria-live="polite"></article>
+  </section>
+
+  <section class="eco" aria-label="The ecosystem around you">
+    <div class="wrap">
+      <span class="kicker">Why Riihimäki</span>
+      <h3>The people you need are next door</h3>
+      <p class="sub">Whatever route you take, the ecosystem is a compact, working one: end-users, industry, research and coaches in a single small city.</p>
+      <div class="eco-grid">
+        <div class="eco-cell"><div class="r">End-users</div><div class="n">Finnish Defence Forces</div><div class="d">Research and technology units based in Riihimäki</div></div>
+        <div class="eco-cell"><div class="r">Industry</div><div class="n">Sako &amp; Millog</div><div class="d">Defence-industry partners; Millog runs the dual-use testing</div></div>
+        <div class="eco-cell"><div class="r">Coaches</div><div class="n">ICEYE · Varjo · Kelluu</div><div class="d">Experts from leading dual-use companies</div></div>
+        <div class="eco-cell"><div class="r">Coordinator</div><div class="n">City of Riihimäki</div><div class="d">Initiator and coordinator of the DEFINE network</div></div>
+        <div class="eco-cell"><div class="r">Knowledge &amp; talent</div><div class="n">HAMK</div><div class="d">Automation, robotics and engineering expertise</div></div>
+        <div class="eco-cell"><div class="r">Reach</div><div class="n">NATO &amp; EU ecosystems</div><div class="d">Connections to investors and customers across allied markets</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="cta">
+  <div class="wrap">
+    <div>
+      <h3>Ready to find your route in?</h3>
+      <p class="sub">One entry path · five routes · a named contact from the first conversation</p>
+    </div>
+    <a class="apply" href="https://www.definefinland.fi/en/" target="_blank" rel="noopener">Start at definefinland.fi →</a>
+  </div>
+</footer>
+
+<script>
+  /* ===== segment routes (from the 6-segment analysis; shown at MATCH) ===== */
+  const segments = [
+    { id:"company", label:"Company / Startup", route:["Accelerator","Testing","Market access"] },
+    { id:"industry", label:"Established industry", route:["Testing","Customers","Suppliers"] },
+    { id:"rd", label:"R&D / Research", route:["Research","Talent","Facilities"] },
+    { id:"public", label:"Public sector", route:["Pilots","Demos","Municipal links"] },
+    { id:"intl", label:"International", route:["Soft landing","Finnish ecosystem","Local partners"] }
+  ];
+  let seg = 0;
+
+  /* ===== the five stages ===== */
+  const stages = [
+    {
+      short:"Discover", title:"Discover", q:"What is DEFINE?", badge:null,
+      sum:"You come across DEFINE and quickly understand what it is: a defence and dual-use innovation ecosystem in Riihimäki, with a free accelerator, a hub, real end-user testing, and NATO & EU reach.",
+      sees:"A clear value proposition: what DEFINE is, and whether it is for you.",
+      owns:"The DEFINE team, keeping the story clear and consistent.",
+      touch:"Website · events · referrals · NATO Innovation Range"
+    },
+    {
+      short:"Connect", title:"Connect", q:"Who do I talk to?", badge:null,
+      sum:"You reach a real person, not a form. A named contact opens the door, listens to your goal, and makes sure you are pointed to the right part of the ecosystem.",
+      sees:"A named contact and a first conversation about your needs.",
+      owns:"The DEFINE Hub team: first response, needs intake and routing.",
+      touch:"Contact form · scoping call · Hub visit"
+    },
+    {
+      short:"Match", title:"Match", q:"What could we do?", badge:"ROUTE",
+      sum:"Together you choose the route that fits your goal, not a one-size-fits-all programme. The accelerator is one route among several inside the wider ecosystem.",
+      sees:"The right route for you: see the highlighted options above.",
+      owns:"DEFINE and partners, matching you to accelerator, testing, R&D, pilot or partnership.",
+      touch:"Route options · testing intake (Millog) · partner introductions"
+    },
+    {
+      short:"Cooperate", title:"Cooperate", q:"How do we work together?", badge:null,
+      sum:"You start working inside the ecosystem (building, testing and connecting) with visible handovers, so at every step you know who owns what comes next.",
+      sees:"Visible handovers, so you always know who owns the next step.",
+      owns:"An assigned owner per step: people, facilities and ecosystem links, tracked in DEFINE OS.",
+      touch:"Hub · Millog testing · HAMK · FDF end-users · coaches"
+    },
+    {
+      short:"Continue", title:"Continue", q:"What happens next?", badge:null,
+      sum:"The relationship does not end at a demo day. You move to the next opportunity: a pilot, a follow-on project, the alumni network, or a base in Riihimäki.",
+      sees:"A visible next step, never a dead end.",
+      owns:"DEFINE alumni and partnerships: follow-up, space and new projects.",
+      touch:"Follow-up · space · alumni · new project · demo days"
+    }
+  ];
+
+  const S = 'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
+  const icons = [
+    `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="9"/><polygon points="15.5,8.5 10.5,10.5 8.5,15.5 13.5,13.5"/></svg>`,
+    `<svg viewBox="0 0 24 24" ${S}><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h6"/><circle cx="18" cy="6" r="3"/></svg>`,
+    `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>`,
+    `<svg viewBox="0 0 24 24" ${S}><circle cx="12" cy="6" r="2.4"/><circle cx="5" cy="18" r="2.4"/><circle cx="19" cy="18" r="2.4"/><path d="M12 8.4L6.2 15.8M12 8.4L17.8 15.8M7 18h10"/></svg>`,
+    `<svg viewBox="0 0 24 24" ${S}><path d="M4 12a8 8 0 0 1 14-5l2 2M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>`
+  ];
+
+  const nodesEl = document.getElementById("nodes");
+  const panel = document.getElementById("panel");
+  const railFill = document.getElementById("railFill");
+  const counterNow = document.getElementById("counterNow");
+  const mobileLbl = document.getElementById("mobileLbl");
+  const statusName = document.getElementById("statusName");
+  const statusSub = document.getElementById("statusSub");
+  const statusSeg = document.getElementById("statusSeg");
+  const statusBar = document.getElementById("statusBar");
+  const segbar = document.getElementById("segbar");
+  let current = 0;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  segments.forEach((sg, i) => {
+    const b = document.createElement("button");
+    b.className = "seg-btn"; b.type = "button";
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.innerHTML = '<span class="sd"></span>' + sg.label;
+    b.addEventListener("click", () => setSeg(i));
+    segbar.appendChild(b);
+  });
+
+  stages.forEach((s, i) => {
+    const b = document.createElement("button");
+    b.className = "node"; b.setAttribute("role", "tab");
+    b.setAttribute("aria-selected", i === 0 ? "true" : "false");
+    b.setAttribute("aria-label", "Stage " + (i+1) + ": " + s.title);
+    b.innerHTML = '<span class="dot">' + (i+1) + '</span><span class="lbl">' + s.short + '</span>';
+    b.addEventListener("click", () => go(i));
+    nodesEl.appendChild(b);
+  });
+
+  function setSeg(i){
+    seg = i;
+    [...segbar.children].forEach((b, j) => b.setAttribute("aria-pressed", j === i ? "true" : "false"));
+    statusSeg.textContent = segments[i].label;
+    go(2); /* jump to Match so the route is visible */
+  }
+
+  function render(i) {
+    const s = stages[i];
+    const isMatch = (i === 2);
+    const badge = s.badge === "ROUTE"
+      ? '<span class="badge route">ROUTE · ' + segments[seg].label + '</span>'
+      : (s.badge ? '<span class="badge">' + s.badge + '</span>' : "");
+    const routeChips = isMatch
+      ? '<div class="routechips">' + segments[seg].route.map(r => '<span class="rc">' + r + '</span>').join("") + '</div>'
+      : "";
+    panel.innerHTML =
+      '<div class="mod-head">' +
+        '<div class="mod-icon">' + icons[i] + '</div>' +
+        '<div class="mod-headings">' +
+          '<div class="stage-eyebrow">Stage ' + (i+1) + ' of 5' + (badge ? " " + badge : "") + '</div>' +
+          '<h2>' + s.title + '</h2>' +
+          '<div class="qn">' + s.q + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<p class="sum">' + s.sum + '</p>' +
+      routeChips +
+      '<div class="cols">' +
+        '<div class="col sees"><div class="k">What you see</div><p>' + s.sees + '</p></div>' +
+        '<div class="col owns"><div class="k">Who owns it</div><p>' + s.owns + '</p></div>' +
+        '<div class="col touch"><div class="k">Touchpoints</div><p>' + s.touch + '</p></div>' +
+      '</div>' +
+      '<div class="nav-row">' +
+        '<button class="nav-btn" id="prevBtn"' + (i === 0 ? " disabled" : "") + '>← Previous</button>' +
+        (i < stages.length - 1
+          ? '<button class="nav-btn primary" id="nextBtn">Next stage →</button>'
+          : '<a class="nav-btn primary" style="text-decoration:none;display:inline-block" href="https://www.definefinland.fi/en/" target="_blank" rel="noopener">Start at definefinland.fi →</a>') +
+      '</div>';
+    const prev = document.getElementById("prevBtn"); if (prev) prev.addEventListener("click", () => go(i-1));
+    const next = document.getElementById("nextBtn"); if (next) next.addEventListener("click", () => go(i+1));
+  }
+
+  function go(i) {
+    if (i < 0 || i >= stages.length) return;
+    current = i;
+    [...nodesEl.children].forEach((n, j) => {
+      n.setAttribute("aria-selected", j === i ? "true" : "false");
+      n.classList.toggle("done", j < i);
+    });
+    railFill.style.width = ((i / (stages.length - 1)) * 100) + "%";
+    counterNow.textContent = i + 1;
+    mobileLbl.textContent = (i+1) + ". " + stages[i].title;
+    statusName.textContent = stages[i].title;
+    statusSub.innerHTML = "Stage " + (i+1) + " / 5 · <span id='statusSeg'>" + segments[seg].label + "</span>";
+    statusBar.style.width = (((i+1) / stages.length) * 100) + "%";
+    if (reduced) { render(i); return; }
+    panel.classList.add("fading");
+    setTimeout(() => { render(i); panel.classList.remove("fading"); }, 190);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") go(current + 1);
+    if (e.key === "ArrowLeft") go(current - 1);
+  });
+
+  render(0); go(0);
+
+  /* ambient particles */
+  (function(){
+    if (reduced) return;
+    const c = document.getElementById('particles'); if(!c) return;
+    const ctx = c.getContext('2d'); let w, h, pts;
+    function size(){ w = c.width = innerWidth; h = c.height = innerHeight;
+      const count = Math.min(64, Math.floor(w*h/26000));
+      pts = Array.from({length:count}, (_,i)=>({ x:(i*97 % w), y:((i*57) % h), vx:((i%7)-3)/26, vy:((i%5)-2)/26, r:0.6 + (i%3)*0.5 })); }
+    size(); addEventListener('resize', size);
+    function frame(){ ctx.clearRect(0,0,w,h);
+      for (const p of pts){ p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0)p.x=w; if(p.x>w)p.x=0; if(p.y<0)p.y=h; if(p.y>h)p.y=0;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fillStyle='rgba(79,214,227,0.35)'; ctx.fill(); }
+      requestAnimationFrame(frame); }
+    requestAnimationFrame(frame);
+  })();
+</script>
+</body>
+</html>
