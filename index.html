@@ -295,44 +295,128 @@
   ];
   let seg = 0;
 
-  /* ===== the five stages ===== */
+  /* ===== the five stages (shared structure; content is per segment below) ===== */
   const stages = [
-    {
-      short:"Discover", title:"Discover", q:"What is DEFINE?", badge:null,
-      sum:"You come across DEFINE and quickly understand what it is: a defence and dual-use innovation ecosystem in Riihimäki, with a free accelerator, a hub, real end-user testing, and NATO & EU reach.",
-      sees:"A clear value proposition: what DEFINE is, and whether it is for you.",
-      owns:"The DEFINE team, keeping the story clear and consistent.",
-      touch:"Website · events · referrals · NATO Innovation Range"
-    },
-    {
-      short:"Connect", title:"Connect", q:"Who do I talk to?", badge:null,
-      sum:"You reach a real person, not a form. A named contact opens the door, listens to your goal, and makes sure you are pointed to the right part of the ecosystem.",
-      sees:"A named contact and a first conversation about your needs.",
-      owns:"The DEFINE Hub team: first response, needs intake and routing.",
-      touch:"Contact form · scoping call · Hub visit"
-    },
-    {
-      short:"Match", title:"Match", q:"What could we do?", badge:"ROUTE",
-      sum:"Together you choose the route that fits your goal, not a one-size-fits-all programme. The accelerator is one route among several inside the wider ecosystem.",
-      sees:"The right route for you: see the highlighted options above.",
-      owns:"DEFINE and partners, matching you to accelerator, testing, R&D, pilot or partnership.",
-      touch:"Route options · testing intake (Millog) · partner introductions"
-    },
-    {
-      short:"Cooperate", title:"Cooperate", q:"How do we work together?", badge:null,
-      sum:"You start working inside the ecosystem (building, testing and connecting) with visible handovers, so at every step you know who owns what comes next.",
-      sees:"Visible handovers, so you always know who owns the next step.",
-      owns:"An assigned owner per step: people, facilities and ecosystem links, tracked in DEFINE OS.",
-      touch:"Hub · Millog testing · HAMK · FDF end-users · coaches"
-    },
-    {
-      short:"Continue", title:"Continue", q:"What happens next?", badge:null,
-      sum:"The relationship does not end at a demo day. You move to the next opportunity: a pilot, a follow-on project, the alumni network, or a base in Riihimäki.",
-      sees:"A visible next step, never a dead end.",
-      owns:"DEFINE alumni and partnerships: follow-up, space and new projects.",
-      touch:"Follow-up · space · alumni · new project · demo days"
-    }
+    { short:"Discover", title:"Discover", q:"What is DEFINE?", badge:null },
+    { short:"Connect", title:"Connect", q:"Who do I talk to?", badge:null },
+    { short:"Match", title:"Match", q:"What could we do?", badge:"ROUTE" },
+    { short:"Cooperate", title:"Cooperate", q:"How do we work together?", badge:null },
+    { short:"Continue", title:"Continue", q:"What happens next?", badge:null }
   ];
+
+  /* ===== per-segment content: 5 partner types × 5 stages ===== */
+  const stageContent = {
+    company: [
+      { sum:"You come across DEFINE and see what it offers a startup: Finland's first defence and dual-use accelerator — free, no equity — plus real end-user testing and a route into NATO & EU markets.",
+        sees:"Whether your startup fits: scalable tech, an MVP or prototype, a motivated team from a NATO country.",
+        owns:"The DEFINE team, keeping the startup offer clear: free, no equity, remote-friendly.",
+        touch:"Website · startup events · referrals · NATO Innovation Range" },
+      { sum:"You reach a real person, not a form. A named contact hears where your product stands and what you need next — coaching, testing or customers — and points you to the right route in.",
+        sees:"A named contact and a first conversation about your product and stage.",
+        owns:"The DEFINE Hub team: first response, startup intake and routing.",
+        touch:"Contact form · scoping call · Hub visit" },
+      { sum:"Together you pick the startup route: the accelerator batch for coaching and growth, dual-use testing with real end-users, and introductions that open NATO & EU market access.",
+        sees:"Your route: accelerator, testing and market access, matched to your stage.",
+        owns:"DEFINE and Redstone, matching you to the accelerator batch, testing or direct introductions.",
+        touch:"Accelerator application · testing intake (Millog) · investor intros" },
+      { sum:"You build inside the ecosystem: intensive sessions and 1:1 coaching in the accelerator, testing with Millog, and feedback from Finnish Defence Forces end-users — remotely or on-site in Riihimäki.",
+        sees:"Coaching from dual-use experts and direct access to end-users while you build.",
+        owns:"Redstone runs the program; coaches come from companies like ICEYE, Varjo and Kelluu; DEFINE coordinates.",
+        touch:"Accelerator sessions · 1:1 coaching · Millog testing · FDF end-users" },
+      { sum:"After Demo Day you stay in the network: follow-on pilots, investor connections and the alumni community — or a base in Riihimäki as you grow into NATO & EU markets.",
+        sees:"A visible next step: pilot, funding conversations, alumni network or a base in Riihimäki.",
+        owns:"DEFINE alumni and partnerships: follow-up, space and investor connections.",
+        touch:"Demo Day · alumni network · follow-on pilots · office space" }
+    ],
+    industry: [
+      { sum:"You come across DEFINE and see what it offers established industry: dual-use testing infrastructure, curated startup dealflow, and new customers and suppliers around one compact defence ecosystem.",
+        sees:"What the ecosystem adds to your business: testing, partners and dealflow.",
+        owns:"The DEFINE team, keeping the industry offer clear and concrete.",
+        touch:"Website · industry events · referrals · NATO Innovation Range" },
+      { sum:"You reach a named contact who understands industry needs: testing capacity, technology scouting or supply-chain partners. One conversation maps where DEFINE plugs into your business.",
+        sees:"A named contact and a conversation about testing, scouting and partnerships.",
+        owns:"The DEFINE Hub team: first response, needs intake and routing.",
+        touch:"Contact form · scoping call · site visit" },
+      { sum:"Together you pick the industry route: dual-use testing with Millog, meeting startup and scale-up suppliers from the batches, and reaching new defence customers through the network.",
+        sees:"Your route: testing, customers and suppliers, matched to your needs.",
+        owns:"DEFINE and partners, matching you to testing capacity, startups and buyers.",
+        touch:"Testing intake (Millog) · startup dealflow · customer introductions" },
+      { sum:"You work inside the ecosystem: run tests with Millog, co-develop with HAMK and startups, and meet Finnish Defence Forces end-users and other industry players around shared projects.",
+        sees:"Concrete projects: tests booked, pilots running and partners at the same table.",
+        owns:"An assigned owner per step: Millog for testing, DEFINE for coordination.",
+        touch:"Millog testing · HAMK projects · FDF end-users · industry meetups" },
+      { sum:"Cooperation becomes standing: recurring testing, a scouting channel into every accelerator batch, and long-term partnerships — with a presence in Riihimäki if you want one.",
+        sees:"A standing partnership, not a one-off project.",
+        owns:"DEFINE partnerships: follow-up, renewals and new opportunities.",
+        touch:"Recurring testing · batch scouting · demo days · partnership reviews" }
+    ],
+    rd: [
+      { sum:"You come across DEFINE and see what it offers research: Finnish Defence Forces research units next door, HAMK's applied expertise, and companies looking for research partners in one city.",
+        sees:"Where your research fits: partners, facilities and real problems to work on.",
+        owns:"The DEFINE team with HAMK, keeping the research offer clear.",
+        touch:"Website · HAMK · research seminars · NATO Innovation Range" },
+      { sum:"You reach a named contact who maps your research interests to the ecosystem: joint projects, student talent, facilities or industry collaboration — and connects you to the right people.",
+        sees:"A named contact and a conversation about your research goals.",
+        owns:"The DEFINE Hub team with HAMK: intake and research routing.",
+        touch:"Contact form · scoping call · campus visit" },
+      { sum:"Together you pick the research route: joint projects with companies and end-users, access to talent through HAMK, and facilities for building and testing.",
+        sees:"Your route: research, talent and facilities, matched to your field.",
+        owns:"DEFINE, HAMK and partners, matching research to companies and end-users.",
+        touch:"Project scoping · HAMK talent · facility access" },
+      { sum:"You work inside the ecosystem: joint R&D with companies, thesis and project students from HAMK, and validation with Finnish Defence Forces end-users and Millog's testing.",
+        sees:"Running projects with companies, students and end-users involved.",
+        owns:"A named owner per project: HAMK, the company partner or DEFINE.",
+        touch:"Joint projects · student work · Millog testing · FDF feedback" },
+      { sum:"One project leads to the next: follow-on research, new industry partners from each accelerator batch, and a long-term position inside a growing defence research ecosystem.",
+        sees:"A pipeline of new projects and partners, not a single engagement.",
+        owns:"DEFINE and HAMK: follow-up and new project matchmaking.",
+        touch:"Follow-on projects · new batches · seminars · publications" }
+    ],
+    public: [
+      { sum:"You come across DEFINE and see what it offers the public sector: a place to see dual-use technology working, pilot it in real settings, and link your municipality or agency into the network.",
+        sees:"What the ecosystem offers you: pilots, demos and peer municipalities.",
+        owns:"The City of Riihimäki and the DEFINE team, keeping the public offer clear.",
+        touch:"Website · public events · municipal networks · NATO Innovation Range" },
+      { sum:"You reach a named contact who understands public-sector needs: what you could pilot, what you need to see demonstrated, and who else should be at the table.",
+        sees:"A named contact and a conversation about your needs and constraints.",
+        owns:"The DEFINE Hub team with the City of Riihimäki: intake and routing.",
+        touch:"Contact form · scoping call · delegation visit" },
+      { sum:"Together you pick the public route: pilots with vetted companies, demo days to see technology first-hand, and municipal links to cities already working with the ecosystem.",
+        sees:"Your route: pilots, demos and municipal links, matched to your mandate.",
+        owns:"DEFINE and the City of Riihimäki, matching needs to companies.",
+        touch:"Pilot scoping · demo days · city-to-city introductions" },
+      { sum:"You run pilots inside the ecosystem: companies deliver, DEFINE coordinates, and outcomes are documented so the results can carry into procurement and policy work.",
+        sees:"Pilots running with clear owners and documented outcomes.",
+        owns:"An assigned owner per pilot; DEFINE coordinates across the parties.",
+        touch:"Pilots · demo days · site visits · reporting" },
+      { sum:"Cooperation continues: repeat pilots, early looks at each new accelerator batch, and a standing link between your organisation and the defence innovation network.",
+        sees:"A standing channel to new technology, not a one-off pilot.",
+        owns:"DEFINE and the City of Riihimäki: follow-up and renewals.",
+        touch:"New pilots · batch previews · municipal network · events" }
+    ],
+    intl: [
+      { sum:"You come across DEFINE from abroad and see the offer: a soft landing into Finland's defence ecosystem, a remote-friendly accelerator open to NATO countries, and a route into EU markets.",
+        sees:"Whether Finland via DEFINE fits your entry plan, before you commit.",
+        owns:"The DEFINE team, keeping the international offer clear.",
+        touch:"Website · international events · networks & delegations · NATO Innovation Range" },
+      { sum:"You reach a named contact who works with international companies: your goals, your timeline and what a Finnish entry would take — in one conversation, remotely.",
+        sees:"A named contact and a first conversation, without travelling.",
+        owns:"The DEFINE Hub team: international intake and routing.",
+        touch:"Contact form · remote scoping call · optional visit" },
+      { sum:"Together you pick the landing route: the remote-friendly accelerator, introductions to Finnish partners and end-users, and the practicalities of setting up in Finland.",
+        sees:"Your route: soft landing, the Finnish ecosystem and local partners.",
+        owns:"DEFINE and partners, matching your entry to programs and partners.",
+        touch:"Accelerator application · partner intros · soft-landing support" },
+      { sum:"You work into the ecosystem remotely or on-site: accelerator participation from your home base, testing visits to Riihimäki, and growing relationships with Finnish partners.",
+        sees:"Real traction in Finland while working mostly from your home base.",
+        owns:"DEFINE coordinates; Redstone runs the program; local partners host.",
+        touch:"Remote sessions · Riihimäki visits · Millog testing · partner meetings" },
+      { sum:"The landing becomes a base: a Finnish presence in Riihimäki if you want it, standing local partners, and a position inside the NATO & EU defence ecosystem.",
+        sees:"A durable Finnish foothold, not a one-time visit.",
+        owns:"DEFINE alumni and partnerships: space, contacts and next steps.",
+        touch:"Office space · alumni network · Finnish partners · EU & NATO events" }
+    ]
+  };
 
   const S = 'fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
   const icons = [
@@ -379,11 +463,12 @@
     seg = i;
     [...segbar.children].forEach((b, j) => b.setAttribute("aria-pressed", j === i ? "true" : "false"));
     statusSeg.textContent = segments[i].label;
-    go(2); /* jump to Match so the route is visible */
+    go(current); /* re-render the open stage with this segment's own content */
   }
 
   function render(i) {
     const s = stages[i];
+    const c = stageContent[segments[seg].id][i];
     const isMatch = (i === 2);
     const badge = s.badge === "ROUTE"
       ? '<span class="badge route">ROUTE · ' + segments[seg].label + '</span>'
@@ -400,12 +485,12 @@
           '<div class="qn">' + s.q + '</div>' +
         '</div>' +
       '</div>' +
-      '<p class="sum">' + s.sum + '</p>' +
+      '<p class="sum">' + c.sum + '</p>' +
       routeChips +
       '<div class="cols">' +
-        '<div class="col sees"><div class="k">What you see</div><p>' + s.sees + '</p></div>' +
-        '<div class="col owns"><div class="k">Who owns it</div><p>' + s.owns + '</p></div>' +
-        '<div class="col touch"><div class="k">Touchpoints</div><p>' + s.touch + '</p></div>' +
+        '<div class="col sees"><div class="k">What you see</div><p>' + c.sees + '</p></div>' +
+        '<div class="col owns"><div class="k">Who owns it</div><p>' + c.owns + '</p></div>' +
+        '<div class="col touch"><div class="k">Touchpoints</div><p>' + c.touch + '</p></div>' +
       '</div>' +
       '<div class="nav-row">' +
         '<button class="nav-btn" id="prevBtn"' + (i === 0 ? " disabled" : "") + '>← Previous</button>' +
